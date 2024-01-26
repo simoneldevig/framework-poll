@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col gap-2 items-center justify-center aspect-square h-full rounded-xl border-2 relative overflow-hidden"
+    class="flex flex-col gap-2 items-center justify-center aspect-square h-full rounded-xl border-2 relative overflow-hidden border-dashed border-purple-700/25"
   >
     <h2 class="text-lg font-semibold">{{ props.name }}</h2>
     <div class="font-light text-sm text-center">
