@@ -1,7 +1,7 @@
 <template>
   <main class="flex flex-col w-screen h-screen justify-center gap-4 sm:gap-6 bg-slate-200">
       <h1 class="text-5xl font-extrabold text-center">Vote for</h1>
-      <div class="flex items-center justify-center gap-4 h-96 container mx-auto">
+      <div class="flex items-center justify-center gap-4 h-96 container mx-auto px-4">
         <div class="flex w-2/6 flex-col h-full justify-center">
           <Bar name="Vue" :votes="votes.vue" :votes-percentage="votesPercentage.vue" />
           <button @click="vote('vue')" class="mt-4 self-center focus:outline-none text-white bg-purple-700 hover:bg-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 mb-2">
