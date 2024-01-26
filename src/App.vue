@@ -66,12 +66,6 @@
     }
   });
 
-  watch(voted, (newValue, oldValue) => {
-    if (newValue === 'none') {
-      socket.emit('unvote', oldValue);
-    }
-  });
-
   onMounted(() => {  
     socket.on('votes', (voted: { vue: number; react: number; blazor: number }) => {
       votes.value.vue = voted.vue || 0;
