@@ -49,11 +49,11 @@
 <script setup lang="ts">
   import {ref, computed, watch, onMounted, onUnmounted}  from 'vue';
   import io from 'socket.io-client';
-import { useLocalStorage } from '@vueuse/core';
+  import { useSessionStorage } from '@vueuse/core';
 
   const socket = io(import.meta.env.VITE_SOCKET_URL || 'localhost:3005');
   const voted = ref('none');
-  useLocalStorage('voted', voted);
+  useSessionStorage('voted', voted);
   const votes = ref<{[key: string]: number}>({ vue: 0, react: 0, blazor: 0 });
 
   const votesPercentage = computed(() => {
@@ -85,11 +85,12 @@ import { useLocalStorage } from '@vueuse/core';
   });
 
   const vote = (who: string) => {
+    console.log(voted.value, who);
     if (voted.value === who) return
 
     if (voted.value !== 'none' || who === 'none') {
       const previousVoted = voted
-      socket.emit('unvote', previousVoted);
+      socket.emit('unvote', previousVoted.value);
 
       votes.value[previousVoted.value] > 0 ? votes.value[previousVoted.value]-- : votes.value[previousVoted.value] = 0;
     }

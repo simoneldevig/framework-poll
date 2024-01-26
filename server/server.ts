@@ -25,13 +25,12 @@ io.on('connection', function (socket) {
   socket.on('vote', (who: Who) => {
     votes[who]++
     socket.broadcast.emit('votes', votes)
-    // io.emit('votes', votes)
   })
 
   socket.on('unvote', (who: Who) => {
-    votes[who]--
+    votes[who]--;
+    console.group(votes, who);
     socket.broadcast.emit('votes', votes)
-    // io.emit('votes', votes)
   })
 })
 io.listen(Number(process.env.PORT) || 3005)
