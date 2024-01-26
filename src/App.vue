@@ -1,70 +1,57 @@
 <template>
   <main class="flex flex-col w-screen h-screen justify-center gap-4 sm:gap-6 bg-slate-200">
-    <h1 class="text-5xl font-extrabold text-center">Vote for</h1>
-    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 h-2/3 sm:h-1/3">
-      <button
-        :class="[
-          'flex flex-col gap-2 items-center justify-center aspect-square h-full rounded-xl border-2 relative overflow-hidden',
-          voted === 'vue' ? 'border-green-400' : ''
-        ]"
-        @click="vote('vue')"
-      >
-        <h2 class="text-lg font-semibold">Vue</h2>
-        <div class="font-light text-sm">
-          {{ votes.vue }} votes · {{ votesPercentage.vue }}%
+      <h1 class="text-5xl font-extrabold text-center">Vote for</h1>
+      <div class="flex items-center justify-center gap-4 h-96 container mx-auto">
+        <div class="flex w-2/6 flex-col h-full justify-center">
+          <Bar name="Vue" :votes="votes.vue" :votes-percentage="votesPercentage.vue" />
+          <button @click="vote('vue')" class="mt-4 self-center focus:outline-none text-white bg-purple-700 hover:bg-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 mb-2">
+            Vote
+          </button>
         </div>
-        <div
-          :style="{ height: votesPercentage.vue + '%' }"
-          class="absolute left-0 right-0 bottom-0 bg-pink-400 bg-opacity-50 rounded-lg transition-all duration-700"
-        ></div>
-      </button>
-      <div>OR</div>
-      <button
-        :class="[
-          'flex flex-col gap-2 items-center justify-center aspect-square h-full rounded-xl border-2 relative overflow-hidden',
-          voted === 'dog' ? 'border-green-400' : ''
-        ]"
-        @click="vote('react')"
-      >
-        <h2 class="text-lg font-semibold">React</h2>
-        <div class="font-light text-sm">
-          {{ votes.react }} votes · {{ votesPercentage.react }}%
+        <div class="flex w-2/6 flex-col h-full justify-center">
+          <Bar name="React" :votes="votes.react" :votes-percentage="votesPercentage.react" />
+          <button @click="vote('react')" class="mt-4 self-center focus:outline-none text-white bg-purple-700 hover:bg-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 mb-2">
+            Vote
+          </button>
         </div>
-        <div
-          :style="{ height: votesPercentage.react + '%' }"
-          class="absolute left-0 right-0 bottom-0 bg-pink-400 bg-opacity-50 rounded-lg transition-all duration-700"
-        ></div>
+        <div class="flex w-2/6 flex-col h-full justify-center">
+          <Bar name="Blazor" :votes="votes.blazor" :votes-percentage="votesPercentage.blazor" />
+          <button @click="vote('blazor')" class="mt-4 self-center focus:outline-none text-white bg-purple-700 hover:bg-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 mb-2">
+            Vote
+          </button>
+        </div>
+      </div>
+      <h2 class="text-center text-lg font-semibold">Total {{ votes.vue + votes.react }} votes</h2>
+      <button
+        @click="vote('none')"
+        class="self-center focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
+      >
+        Remove your vote {{ voted !== 'none' ? `(${ voted })` : '' }}
       </button>
-    </div>
-    <h2 class="text-center text-lg font-semibold">Total {{ votes.vue + votes.react }} votes</h2>
-    <button
-      @click="vote('none')"
-      class="self-center focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
-    >
-      Remove your vote
-    </button>
   </main>
 </template>
 
 <script setup lang="ts">
-  import {ref, computed, watch, onMounted, onUnmounted}  from 'vue';
+  import {ref, onMounted, onUnmounted, watch}  from 'vue';
   import io from 'socket.io-client';
   import { useSessionStorage } from '@vueuse/core';
+  import Bar from './components/Bar.vue';
 
   const socket = io(import.meta.env.VITE_SOCKET_URL || 'localhost:3005');
   const voted = ref('none');
   useSessionStorage('voted', voted);
   const votes = ref<{[key: string]: number}>({ vue: 0, react: 0, blazor: 0 });
+  const votesPercentage = ref<{[key: string]: number | string}>({ vue: 0, react: 0, blazor: 0 });
 
-  const votesPercentage = computed(() => {
+  watch(votes, () => {
     const totalVotes = votes.value.vue + votes.value.react + votes.value.blazor;
 
-    return  {
-        vue: totalVotes > 0 ? ((votes.value.vue * 100) / (totalVotes)).toFixed(2) : 0,
-        react: totalVotes > 0 ? ((votes.value.react * 100) / (totalVotes)).toFixed(2) : 0,
-        blazor: totalVotes > 0 ? ((votes.value.blazor * 100) / (totalVotes)).toFixed(2) : 0,
+    votesPercentage.value = {
+      vue: totalVotes > 0 ? ((votes.value.vue * 100) / (totalVotes)).toFixed(2) : 0,
+      react: totalVotes > 0 ? ((votes.value.react * 100) / (totalVotes)).toFixed(2) : 0,
+      blazor: totalVotes > 0 ? ((votes.value.blazor * 100) / (totalVotes)).toFixed(2) : 0,
     }
-  });
+  }, {immediate: true, deep: true});
 
   onMounted(() => {  
     socket.on('votes', (voted: { vue: number; react: number; blazor: number }) => {
@@ -78,7 +65,7 @@
     socket.offAny();
   });
 
-  const vote = (who: string) => {
+  const vote = (who: 'vue' | 'react' | 'blazor' | 'none') => {
     console.log(voted.value, who);
     if (voted.value === who) return
 
@@ -95,12 +82,3 @@
   };
 
 </script>
-
-<style scoped>
-.toggle {
-  position: absolute;
-  top: 18px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-</style>

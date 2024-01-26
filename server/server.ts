@@ -29,7 +29,6 @@ io.on('connection', function (socket) {
 
   socket.on('unvote', (who: Who) => {
     votes[who]--;
-    console.group(votes, who);
     socket.broadcast.emit('votes', votes)
   })
 })
