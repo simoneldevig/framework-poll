@@ -3,8 +3,9 @@
     class="flex flex-col gap-2 items-center justify-center aspect-square h-full rounded-xl border-2 relative overflow-hidden"
   >
     <h2 class="text-lg font-semibold">{{ props.name }}</h2>
-    <div class="font-light text-sm">
-      {{ props.votes }} votes · {{ props.votesPercentage }}%
+    <div class="font-light text-sm text-center">
+      <p>{{ props.votes }} votes</p>
+      <p>{{ props.votesPercentage }}%</p>
     </div>
     <div
       :style="{ height: props.votesPercentage + '%' }"
