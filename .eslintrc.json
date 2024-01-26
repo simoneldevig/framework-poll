@@ -1,0 +1,6 @@
+{
+  "extends": "@novicell/eslint-config-vue",
+  "rules": {
+    "vue/require-default-prop": "off"
+  }
+}
