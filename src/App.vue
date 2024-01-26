@@ -49,9 +49,11 @@
 <script setup lang="ts">
   import {ref, computed, watch, onMounted, onUnmounted}  from 'vue';
   import io from 'socket.io-client';
+import { useLocalStorage } from '@vueuse/core';
 
   const socket = io(import.meta.env.VITE_SOCKET_URL || 'localhost:3005');
   const voted = ref('none');
+  useLocalStorage('voted', voted);
   const votes = ref<{[key: string]: number}>({ vue: 0, react: 0, blazor: 0 });
 
   const votesPercentage = computed(() => {
