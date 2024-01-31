@@ -2,7 +2,7 @@
 
 This is a small poll app for voting between Vue, React and Blazor using Websockets with Socket.io. The app itself is built with Vite, TypeScript Vue 3 and Tailwind.
 
-**Link:** https://framework-poll.netlify.app
+**Link:** https://framework-poll-simoneldevig.netlify.app
 
 ## Getting started
 
