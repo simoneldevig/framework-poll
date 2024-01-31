@@ -1,8 +1,8 @@
-# Vue TO-DO
+# Framework poll
 
-This is a small example of how to build a TO-DO app with Vue 3, Vite, TailwindCSS and TypeScript. Markup is borrowed from https://codepen.io/robstinson/pen/YzGLMYw
+This is a small poll app for voting between Vue, React and Blazor using Websockets with Socket.io. The app itself is built with Vite, TypeScript Vue 3 and Tailwind.
 
-**Demo:** https://vue-todo-simoneldevig.netlify.app
+**Link:** https://framework-poll.netlify.app
 
 ## Getting started
 
@@ -10,6 +10,7 @@ This is a small example of how to build a TO-DO app with Vue 3, Vite, TailwindCS
 npm i
 
 npm run dev
+npm run server
 ```
 
 ## Recommended IDE Setup
